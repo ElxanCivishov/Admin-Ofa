@@ -56,7 +56,7 @@ const Sidebar = () => {
               <span>Paket Məhsullar</span>
             </li>
           </Link>
-          <Link to="/package-products" style={{ textDecoration: "none" }}>
+          <Link to="/add-product" style={{ textDecoration: "none" }}>
             <li>
               <MdAdd className="icon" />
               <span>Yeni məhsul</span>

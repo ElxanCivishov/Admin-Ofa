@@ -1,5 +1,11 @@
+import List from "../../components/utils/list/List";
+
 const Jams = () => {
-  return <div>Products</div>;
+  return (
+    <div className="products">
+      <List type="Mürəbbələr və cemlər" />
+    </div>
+  );
 };
 
 export default Jams;

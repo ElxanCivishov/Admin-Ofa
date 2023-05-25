@@ -11,6 +11,10 @@ import PackageProducts from "./pages/products/PackageProducts";
 import Gallery from "./pages/gallery/Gallery";
 import Recipes from "./pages/recipes/Recipes";
 import DryFruits from "./pages/products/DryFruits";
+import FeatureList from "./components/utils/list/featureList";
+import Product from "./pages/products/Product";
+import Recipe from "./pages/recipes/Recipe";
+import Add from "./pages/gallery/Add";
 
 function App() {
   const router = createBrowserRouter([
@@ -43,12 +47,36 @@ function App() {
           element: <PackageProducts />,
         },
         {
+          path: "/feature-list/:id",
+          element: <FeatureList />,
+        },
+        {
+          path: "/add-product",
+          element: <Product />,
+        },
+        {
+          path: "/edit-product/:id",
+          element: <Product />,
+        },
+        {
           path: "/gallery",
           element: <Gallery />,
         },
         {
+          path: "/add-gallery",
+          element: <Add />,
+        },
+        {
           path: "/recipes",
           element: <Recipes />,
+        },
+        {
+          path: "/recipe",
+          element: <Recipe />,
+        },
+        {
+          path: "/recipe/:id",
+          element: <Recipe />,
         },
       ],
     },
