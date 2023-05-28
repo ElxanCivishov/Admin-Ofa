@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { useState } from "react";
 import DeleteModal from "../../components/utils/modal/DeleteModal";
+import { MdAdd } from "react-icons/md";
 
 const Recipes = () => {
   const [open, setOpen] = useState(false);
@@ -19,8 +20,10 @@ const Recipes = () => {
       <main>
         <div className="recipes__header">
           <h1>Reseptlər</h1>
-          <Link to="/recipe">
-            <span>Yeni məhsul</span>
+          <Link className="link" to="/recipe">
+            <span>
+              Yeni resept <MdAdd />
+            </span>
           </Link>
         </div>
         <div className="recipes__body">
@@ -32,7 +35,6 @@ const Recipes = () => {
                 <th>Başlıq</th>
                 <th>Tərkib</th>
                 <th>Tarix</th>
-                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -48,9 +50,7 @@ const Recipes = () => {
                   faydalı Qurutma zamanı bütün vitaminlər və faydalı
                 </td>
                 <td style={{ minWidth: "200px" }}> 17 Dec, 2022 </td>
-                <td>
-                  <p className="status positive">Aktiv</p>
-                </td>
+
                 <td style={{ minWidth: "200px" }}>
                   <Link to="/recipe/12">
                     <FaEdit style={{ marginRight: "15px", color: "gold" }} />
@@ -72,9 +72,7 @@ const Recipes = () => {
                   faydalı Qurutma zamanı bütün vitaminlər və faydalı
                 </td>
                 <td style={{ minWidth: "200px" }}> 17 Dec, 2022 </td>
-                <td>
-                  <p className="status positive">Aktiv</p>
-                </td>
+
                 <td style={{ minWidth: "200px" }}>
                   <Link to="/recipe/12">
                     <FaEdit style={{ marginRight: "15px", color: "gold" }} />
@@ -96,9 +94,7 @@ const Recipes = () => {
                   faydalı Qurutma zamanı bütün vitaminlər və faydalı
                 </td>
                 <td style={{ minWidth: "200px" }}> 17 Dec, 2022 </td>
-                <td>
-                  <p className="status positive">Aktiv</p>
-                </td>
+
                 <td style={{ minWidth: "200px" }}>
                   <Link to="/recipe/12">
                     <FaEdit style={{ marginRight: "15px", color: "gold" }} />

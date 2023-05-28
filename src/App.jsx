@@ -13,7 +13,7 @@ import Recipes from "./pages/recipes/Recipes";
 import DryFruits from "./pages/products/DryFruits";
 import FeatureList from "./components/utils/list/featureList";
 import Product from "./pages/products/Product";
-import Recipe from "./pages/recipes/Recipe";
+import Recipe from "./components/recipe/Recipe";
 import Add from "./pages/gallery/Add";
 
 function App() {

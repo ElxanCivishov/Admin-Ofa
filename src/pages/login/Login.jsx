@@ -1,10 +1,11 @@
 import { useState } from "react";
 import "./login.scss";
 import newRequest from "../../config/newReguest";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLoggedIn } from "../../config/Hooks";
+import axios from "axios";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -12,6 +13,7 @@ function Login() {
   const [error, setError] = useState(null);
 
   const isLoggedIn = useLoggedIn();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +34,10 @@ function Login() {
           password,
         });
         localStorage.setItem("currentUser", JSON.stringify(res.data));
-        Navigate("/");
+        const { token } = res.data;
+        axios.defaults.headers.common["Authorization"] = token;
+
+        navigate("/");
       } catch (err) {
         toast.error(err?.response?.data?.message);
       }

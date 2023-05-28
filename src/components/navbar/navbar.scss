@@ -1,65 +1,14 @@
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  width: 100%;
-  padding: 10px 20px;
-  height: 60px;
-  position: sticky;
-  top: 0;
-  background-color: rgb(15, 179, 45);
-  z-index: 10;
-  .rigth {
-    display: flex;
-    gap: 10px;
-    .info {
-      text-align: end;
-      a {
-        text-decoration: none;
-        p {
-          color: rgba(0, 0, 0, 0.62);
-          font-weight: 600;
-        }
-        span {
-          color: #6f6d6d;
-          font-size: 14px;
-        }
-      }
-    }
-    .profile {
-      height: 40px;
-      width: 40px;
-      border: 1px solid rgb(255, 255, 255);
-      border-radius: 50%;
-      -webkit-border-radius: 50%;
-      -moz-border-radius: 50%;
-      -ms-border-radius: 50%;
-      -o-border-radius: 50%;
-      background-color: bisque;
-      transition: all 0.3s ease;
-      -webkit-transition: all 0.3s ease;
-      -moz-transition: all 0.3s ease;
-      -ms-transition: all 0.3s ease;
-      -o-transition: all 0.3s ease;
-      cursor: pointer;
-      &:hover {
-        transform: scale(0.9);
-        -webkit-transform: scale(0.9);
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -o-transform: scale(0.9);
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        -ms-border-radius: 50%;
-        -o-border-radius: 50%;
-      }
-    }
+.profile {
+  margin-right: 10px;
+  text-align: end;
+  p {
+    padding: 3px 5px;
+    margin: 0;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  span {
+    color: grey;
+    font-size: 16px;
   }
 }

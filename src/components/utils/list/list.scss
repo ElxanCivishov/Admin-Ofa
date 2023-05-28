@@ -17,10 +17,10 @@ main.table {
   justify-content: space-between;
   align-items: center;
   h1 {
-    font-size: 24px;
+    font-size: 20px;
   }
   span {
-    font-size: 20px;
+    font-size: 18px;
     background-color: rgb(228, 230, 228);
     color: rgb(15, 179, 45);
     padding: 5px 10px;
@@ -30,7 +30,18 @@ main.table {
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
+    display: flex;
+    align-items: center;
   }
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+  border-style: none;
 }
 
 .table__body {
@@ -127,6 +138,12 @@ tbody tr {
 @media (max-width: 1000px) {
   td:not(:first-of-type) {
     min-width: 12.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .table__header {
+    flex-direction: column;
   }
 }
 

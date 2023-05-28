@@ -7,10 +7,22 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import "./layout.scss";
+import { useState } from "react";
 
 const MainLayout = () => {
   const queryClient = new QueryClient();
   const isLoggedIn = useLoggedIn();
+
+  const [openSidebar, setOpenSidebar] = useState(true);
+
+  const handleCloseSideMenu = () => {
+    setOpenSidebar(false);
+  };
+
+  {
+    openSidebar ? console.log("aciq") : console.log("qapali");
+  }
+
   if (isLoggedIn === null) {
     return <h2 style={{ color: "black" }}>loading...</h2>;
   } else if (isLoggedIn === false) {
@@ -20,9 +32,12 @@ const MainLayout = () => {
       <>
         <QueryClientProvider client={queryClient}>
           <div className="main">
-            <Sidebar />
+            <Sidebar openSidebar={openSidebar} />
             <div className="content">
-              <Navbar />
+              <Navbar
+                openSidebar={openSidebar}
+                setOpenSidebar={setOpenSidebar}
+              />
               <Outlet />
             </div>
           </div>

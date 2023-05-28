@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./widget.scss";
 
 import { MdFormatListBulletedAdd } from "react-icons/md";
@@ -97,9 +98,9 @@ const Widget = ({ type, count }) => {
       </div>
       <div className="right">
         {data.icon}
-        <a href={data.url}>
-          <sapan className="link">{data.link}</sapan>
-        </a>
+        <Link className="link" to={data.url}>
+          <sapan className="widget-link-text">{data.link}</sapan>
+        </Link>
       </div>
     </div>
   );

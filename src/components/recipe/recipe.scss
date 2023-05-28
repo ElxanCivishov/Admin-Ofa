@@ -1,0 +1,38 @@
+.recipe {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+
+  .container {
+    width: 100%;
+    padding: 10px 0px;
+
+    h1 {
+      width: max-content;
+      margin-bottom: 10px;
+      color: gray;
+      font-size: 24px;
+      font-weight: 500;
+      border-bottom: 1px solid rgb(219, 218, 218);
+    }
+
+    .upload-image {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      span {
+        color: black;
+      }
+      .upload-icon {
+        font-size: 22px;
+      }
+    }
+
+    .recipe-lang {
+      color: black;
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+}

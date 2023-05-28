@@ -23,7 +23,7 @@ const Gallery = () => {
       <div className="gallery">
         <div className="title">
           <h2>Qalareya</h2>
-          <Link to="/add-gallery">
+          <Link className="link" to="/add-gallery">
             <span>Yeni şəkil</span>
           </Link>
         </div>

@@ -29,7 +29,6 @@ function FeatureList() {
                 <th>Id</th>
                 <th>Xassə</th>
                 <th>Tarix</th>
-                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -38,9 +37,7 @@ function FeatureList() {
                 <td> 1 </td>
                 <td>Qurudulmuş alma dilimləri.</td>
                 <td> 17 Dec, 2022 </td>
-                <td>
-                  <p className="status positive">Positive</p>
-                </td>
+
                 <td style={{ minWidth: "200px" }}>
                   <Link to="/edit-product/12">
                     <FaEdit style={{ marginRight: "15px", color: "gold" }} />
@@ -55,9 +52,7 @@ function FeatureList() {
                 <td> 1 </td>
                 <td>Qurudulmuş alma dilimləri.</td>
                 <td> 17 Dec, 2022 </td>
-                <td>
-                  <p className="status positive">Positive</p>
-                </td>
+
                 <td style={{ minWidth: "200px" }}>
                   <Link to="/edit-product/12">
                     <FaEdit style={{ marginRight: "15px", color: "gold" }} />
@@ -72,9 +67,7 @@ function FeatureList() {
                 <td> 1 </td>
                 <td>Qurudulmuş alma dilimləri.</td>
                 <td> 17 Dec, 2022 </td>
-                <td>
-                  <p className="status positive">Positive</p>
-                </td>
+
                 <td style={{ minWidth: "200px" }}>
                   <Link to="/edit-product/12">
                     <FaEdit style={{ marginRight: "15px", color: "gold" }} />
@@ -89,9 +82,7 @@ function FeatureList() {
                 <td> 1 </td>
                 <td>Qurudulmuş alma dilimləri.</td>
                 <td> 17 Dec, 2022 </td>
-                <td>
-                  <p className="status positive">Positive</p>
-                </td>
+
                 <td style={{ minWidth: "200px" }}>
                   <Link to="/edit-product/12">
                     <FaEdit style={{ marginRight: "15px", color: "gold" }} />

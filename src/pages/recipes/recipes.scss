@@ -19,10 +19,10 @@
     justify-content: space-between;
     align-items: center;
     h1 {
-      font-size: 24px;
+      font-size: 20px;
     }
     span {
-      font-size: 20px;
+      font-size: 18px;
       background-color: rgb(228, 230, 228);
       color: rgb(15, 179, 45);
       padding: 5px 10px;
@@ -32,6 +32,8 @@
       -moz-border-radius: 5px;
       -ms-border-radius: 5px;
       -o-border-radius: 5px;
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -41,10 +43,13 @@
     background-color: #fffb;
     margin: 0.8rem auto;
     border-radius: 0.6rem;
+    -webkit-border-radius: 0.6rem;
+    -moz-border-radius: 0.6rem;
+    -ms-border-radius: 0.6rem;
+    -o-border-radius: 0.6rem;
     overflow: auto;
     overflow: overlay;
-
-    &::-webkit-scrollbar {
+    &:-webkit-scrollbar {
       width: 0.5rem;
       height: 0.5rem;
     }
@@ -53,6 +58,10 @@
       border-radius: 0.5rem;
       background-color: rgb(15, 179, 45);
       visibility: hidden;
+      -webkit-border-radius: 0.5rem;
+      -moz-border-radius: 0.5rem;
+      -ms-border-radius: 0.5rem;
+      -o-border-radius: 0.5rem;
     }
 
     &:hover::-webkit-scrollbar-thumb {
@@ -102,11 +111,15 @@
 
     td {
       transition: 0.2s ease-in-out;
-
-      p,
-      img {
-        transition: 0.2s ease-in-out;
-      }
+      -webkit-transition: 0.2s ease-in-out;
+      -moz-transition: 0.2s ease-in-out;
+      -ms-transition: 0.2s ease-in-out;
+      -o-transition: 0.2s ease-in-out;
+      transition: 0.2s ease-in-out;
+      -webkit-transition: 0.2s ease-in-out;
+      -moz-transition: 0.2s ease-in-out;
+      -ms-transition: 0.2s ease-in-out;
+      -o-transition: 0.2s ease-in-out;
     }
   }
 
@@ -117,7 +130,7 @@
 
     &.positive {
       background-color: #86e49d;
-      color: rgb(15, 179, 45);
+      color: #0fb32d;
     }
 
     &.negative {
