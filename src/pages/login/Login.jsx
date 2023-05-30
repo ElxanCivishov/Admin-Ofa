@@ -1,46 +1,34 @@
 import { useState } from "react";
 import "./login.scss";
-import newRequest from "../../config/newReguest";
+import { RequestLogin } from "../../config/newReguest";
 import { Navigate, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLoggedIn } from "../../config/Hooks";
-import axios from "axios";
 
 function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
 
   const isLoggedIn = useLoggedIn();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username == "") {
-      setError("Istifadəçi adı daxil edin!");
-      setTimeout(() => {
-        setError("");
-      }, 3000);
+    if (email == "") {
+      toast.error("Istifadəçi adı daxil edin!");
     } else if (password == "") {
-      setError("Parolu daxil edin!");
-      setTimeout(() => {
-        setError("");
-      }, 3000);
+      toast.error("Parolu daxil edin!");
+      toast.error;
     } else {
-      try {
-        const res = await newRequest.post("/login", {
-          email: username,
-          password,
+      RequestLogin({ email, password })
+        .then((res) => {
+          localStorage.setItem("currentUser", JSON.stringify(res)),
+            navigate("/");
+        })
+        .catch((err) => {
+          toast.error("Istifadəçi tapılmadı!");
         });
-        localStorage.setItem("currentUser", JSON.stringify(res.data));
-        const { token } = res.data;
-        axios.defaults.headers.common["Authorization"] = token;
-
-        navigate("/");
-      } catch (err) {
-        toast.error(err?.response?.data?.message);
-      }
     }
   };
 
@@ -51,24 +39,24 @@ function Login() {
       <div className="login">
         <form onSubmit={handleSubmit}>
           <h1>Daxil ol</h1>
-          <label htmlFor="username">Istifadəçi adı</label>
+          <label htmlFor="email">Email</label>
           <input
-            name="username"
-            type="text"
-            id="username"
-            onChange={(e) => setUsername(e.target.value)}
+            name="email"
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <label htmlFor="">Parol</label>
           <input
             name="password"
             type="password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button type="submit">daxil ol</button>
-          {error && <span>{error}</span>}
         </form>
-        <ToastContainer />
       </div>
     );
   }

@@ -52,6 +52,7 @@ tr {
   border-radius: 0.6rem;
   overflow: auto;
   overflow: overlay;
+  text-align: start;
 
   &::-webkit-scrollbar {
     width: 0.5rem;
@@ -74,10 +75,9 @@ table {
 }
 
 td img {
-  width: 36px;
-  height: 36px;
+  width: 80px;
+  height: 80px;
   margin-right: 0.5rem;
-  border-radius: 50%;
   vertical-align: middle;
 }
 
@@ -117,6 +117,11 @@ tbody tr {
       transition: 0.2s ease-in-out;
     }
   }
+}
+
+.preview-icons {
+  color: "rgb(15, 179, 45)";
+  font-size: 16px;
 }
 
 .status {

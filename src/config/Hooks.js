@@ -5,6 +5,7 @@ export const useLoggedIn = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("currentUser"));
+
     setIsLoggedIn(!!user);
   }, []);
 

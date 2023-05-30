@@ -19,10 +19,6 @@ const MainLayout = () => {
     setOpenSidebar(false);
   };
 
-  {
-    openSidebar ? console.log("aciq") : console.log("qapali");
-  }
-
   if (isLoggedIn === null) {
     return <h2 style={{ color: "black" }}>loading...</h2>;
   } else if (isLoggedIn === false) {

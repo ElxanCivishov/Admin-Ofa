@@ -8,9 +8,10 @@
     justify-content: space-between;
     border-bottom: 1px solid rgb(219, 215, 215);
     padding: 10px;
-    span {
+    .add-btn {
       font-size: 20px;
-      background-color: rgb(228, 230, 228);
+      background-color: transparent;
+      border: 1px solid rgb(15, 179, 45);
       color: rgb(15, 179, 45);
       padding: 5px 10px;
       margin: 7px 15px;
@@ -19,6 +20,10 @@
       -moz-border-radius: 5px;
       -ms-border-radius: 5px;
       -o-border-radius: 5px;
+      &:hover {
+        background-color: rgb(15, 179, 45);
+        color: rgb(249, 249, 249);
+      }
     }
   }
   .images {
@@ -75,7 +80,6 @@
   .gallery {
     .images {
       grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
     }
   }
 }
@@ -84,7 +88,6 @@
   .gallery {
     .images {
       grid-template-columns: repeat(5, 1fr);
-      gap: 20px;
     }
   }
 }
@@ -93,7 +96,6 @@
   .gallery {
     .images {
       grid-template-columns: repeat(6, 1fr);
-      gap: 30px;
     }
   }
 }

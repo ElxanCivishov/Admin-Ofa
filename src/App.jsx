@@ -14,10 +14,16 @@ import DryFruits from "./pages/products/DryFruits";
 import FeatureList from "./components/utils/list/featureList";
 import Product from "./pages/products/Product";
 import Recipe from "./components/recipe/Recipe";
-import Add from "./pages/gallery/Add";
+import ErrorPage from "./pages/errorPage/ErrorPage";
+import NotFound from "./pages/notFound/NotFound";
+import Test from "./components/test";
 
 function App() {
   const router = createBrowserRouter([
+    {
+      path: "/test",
+      element: <Test />,
+    },
     {
       path: "/login",
       element: <Login />,
@@ -27,8 +33,14 @@ function App() {
       element: <Register />,
     },
     {
+      path: "/errorpage",
+      element: <ErrorPage />,
+    },
+
+    {
       path: "/",
       element: <MainLayout />,
+      errorElement: <NotFound />,
       children: [
         {
           path: "/",
@@ -62,10 +74,7 @@ function App() {
           path: "/gallery",
           element: <Gallery />,
         },
-        {
-          path: "/add-gallery",
-          element: <Add />,
-        },
+
         {
           path: "/recipes",
           element: <Recipes />,

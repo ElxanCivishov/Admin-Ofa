@@ -44,12 +44,14 @@ export default function DeleteModal({ open, setOpen, product, handleDelete }) {
             <>
               <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                 <b>Id: </b>
-                <span>{product}</span>
+                <span>{product.id}</span>
               </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <b>Başlıq: </b>
-                <span>{product} Lorem ipsum dolor sit amet</span>
-              </Typography>
+              {product.title && (
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  <b>Başlıq: </b>
+                  <span>{product.title} </span>
+                </Typography>
+              )}
             </>
           )}
           <Box sx={{ textAlign: "end" }}>
@@ -68,7 +70,7 @@ export default function DeleteModal({ open, setOpen, product, handleDelete }) {
               size="small"
               color="error"
               sx={{ m: 1, mt: 2 }}
-              onClick={() => handleDelete()}
+              onClick={() => handleDelete(24)}
             >
               Sil
             </Button>

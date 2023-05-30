@@ -10,21 +10,24 @@ import {
   Menu,
   Container,
   Avatar,
-  Tooltip,
   MenuItem,
 } from "@mui/material";
 
 import noImage from "/img/noImage.png";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import newRequest from "../../config/newReguest";
+import { RequestLogout } from "../../config/newReguest";
 
 import { MdMenu } from "react-icons/md";
+import { toast } from "react-toastify";
 
 const Navbar = ({ openSidebar, setOpenSidebar }) => {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+  const { user } = currentUser;
+
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const navigate = useNavigate();
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -33,29 +36,16 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
-    handleCloseUserMenu();
-    localStorage.removeItem("currentUser");
-    delete axios.defaults.headers.common["Authorization"];
-    navigate("/login");
+  const handleLogout = async () => {
+    await RequestLogout()
+      .then(() => {
+        localStorage.setItem("currentUser", null);
+        toast.success("Çıxış tamamlandı.");
+        navigate("/login");
+      })
+      .catch((err) => toast.error(err?.response?.data?.message));
   };
 
-  const setAuthorizationToken = (token) => {
-    axios.defaults.headers.common["Authorization"] = token;
-  };
-
-  const handleTest = async () => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const { token } = currentUser;
-    setAuthorizationToken(token);
-    try {
-      const response = await newRequest.post("/logout", {
-        token,
-      });
-    } catch (error) {
-      alert("auth", error);
-    }
-  };
   return (
     <AppBar position="sticky" style={{ backgroundColor: "rgb(15, 179, 45)" }}>
       <Container maxWidth="xl">
@@ -74,14 +64,12 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <div className="profile">
               <p>Admin</p>
-              <span>Elxan Civishov</span>
+              {/* <span>Elxan Civishov</span> */}
             </div>
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Profili aç">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src={noImage} />
-                </IconButton>
-              </Tooltip>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="photo" src={user.profile_photo_url || noImage} />
+              </IconButton>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
@@ -98,9 +86,6 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem onClick={() => handleTest()}>
-                  <Typography textAlign="center">Profil</Typography>
-                </MenuItem>
                 <MenuItem onClick={() => handleLogout()}>
                   <Typography textAlign="center">Çıxış</Typography>
                 </MenuItem>

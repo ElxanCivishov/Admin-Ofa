@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 import { FaEye, FaTrash, FaEdit } from "react-icons/fa";
 import { useState } from "react";
 import DeleteModal from "../modal/DeleteModal";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdPreview } from "react-icons/md";
+import AdditionModal from "../modal/AdditionModal";
 
-function List({ type }) {
+function List({ type, data }) {
   const [open, setOpen] = useState(false);
+  const [openAddition, setOpenAddition] = useState(false);
   const [product, setProduct] = useState();
 
   const handleClick = (value) => {
@@ -41,91 +43,69 @@ function List({ type }) {
                 <th>Xüsusiyyətlər</th>
                 <th>Əlavə mətn</th>
                 <th>Tarix</th>
-                <th>Qiymət - azn</th>
+                <th>Qiymət</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td style={{ minWidth: "250px" }}>
-                  <img src={noImage} alt="" />
-                  Qurudulmuş alma
-                </td>
-                <td style={{ minWidth: "300px" }}>
-                  Qurutma zamanı bütün vitaminlər və faydalı xüsusiyyətlər
-                  qorunur.
-                </td>
-                <td style={{ minWidth: "250px" }}>
-                  Qurudulmuş alma dilimləri.
-                </td>
-                <td style={{ minWidth: "200px" }}>
-                  Qurudulmuş almanın faydalı xüsusiyyətləri
-                </td>
-                <td>
-                  <Link to="/feature-list/123">
-                    <FaEye style={{ color: "rgb(15, 179, 45)" }} />
-                  </Link>
-                </td>
-                <td style={{ minWidth: "300px" }}>
-                  asasc asica coiacmasocacoasc acoas coasc,asoca scoasc ascoasc
-                  asocasmcoac aoscasmcoasc,aocasoascasocass caskc ascoascmo
-                </td>
-                <td style={{ minWidth: "200px" }}> 17 Dec, 2022 </td>
-                <td style={{ minWidth: "200px" }}>
-                  <strong>180</strong>
-                </td>
+              {data &&
+                data.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td
+                      style={{ minWidth: "300px" }}
+                      className="d-flex align-items-center "
+                    >
+                      <div>
+                        <img src={item.image || noImage} alt="" />
+                      </div>
+                      <div>{item.title}</div>
+                    </td>
+                    <td style={{ minWidth: "300px" }}>{item.content}</td>
+                    <td style={{ minWidth: "250px" }}>{item.composition}</td>
+                    <td style={{ minWidth: "200px" }}>{item.feature_title}</td>
+                    <td style={{ textAlign: "center" }}>
+                      <Link to={`/feature-list/${item.id}`}>
+                        <FaEye
+                          style={{
+                            color: "rgb(15, 179, 45)",
+                            fontSize: "18px",
+                          }}
+                        />
+                      </Link>
+                    </td>
+                    <td style={{ textAlign: "center", minWidth: "150px" }}>
+                      <MdPreview
+                        onClick={() => {
+                          setOpenAddition(true), setProduct(item);
+                        }}
+                        style={{
+                          color: "rgb(15, 179, 45)",
+                          fontSize: "18px",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </td>
+                    <td style={{ minWidth: "150px", textAlign: "center" }}>
+                      {item.created_at || "-"}
+                    </td>
+                    <td style={{ textAlign: "center" }}>
+                      <strong>{item.price}</strong>
+                    </td>
 
-                <td style={{ minWidth: "200px" }}>
-                  <Link to="/edit-product/12">
-                    <FaEdit style={{ marginRight: "15px", color: "gold" }} />
-                  </Link>
-                  <FaTrash
-                    style={{ color: "red", cursor: "pointer" }}
-                    onClick={() => handleClick("test")}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td style={{ minWidth: "250px" }}>
-                  <img src={noImage} alt="" />
-                  Qurudulmuş alma
-                </td>
-                <td style={{ minWidth: "300px" }}>
-                  Qurutma zamanı bütün vitaminlər və faydalı xüsusiyyətlər
-                  qorunur.
-                </td>
-                <td style={{ minWidth: "250px" }}>
-                  Qurudulmuş alma dilimləri.
-                </td>
-                <td style={{ minWidth: "200px" }}>
-                  Qurudulmuş almanın faydalı xüsusiyyətləri
-                </td>
-                <td>
-                  <Link to="/feature-list/123">
-                    <FaEye style={{ color: "rgb(15, 179, 45)" }} />
-                  </Link>
-                </td>
-                <td style={{ minWidth: "300px" }}>
-                  asasc asica coiacmasocacoasc acoas coasc,asoca scoasc ascoasc
-                  asocasmcoac aoscasmcoasc,aocasoascasocass caskc ascoascmo
-                </td>
-                <td style={{ minWidth: "200px" }}> 17 Dec, 2022 </td>
-                <td style={{ minWidth: "200px" }}>
-                  <strong>180</strong>
-                </td>
-
-                <td style={{ minWidth: "200px" }}>
-                  <Link to="/edit-product/12">
-                    <FaEdit style={{ marginRight: "15px", color: "gold" }} />
-                  </Link>
-                  <FaTrash
-                    style={{ color: "red", cursor: "pointer" }}
-                    onClick={() => handleClick("test")}
-                  />
-                </td>
-              </tr>
+                    <td style={{ minWidth: "100px", textAlign: "center" }}>
+                      <Link to={`/edit-product/${item.id}`}>
+                        <FaEdit
+                          style={{ marginRight: "15px", color: "gold" }}
+                        />
+                      </Link>
+                      <FaTrash
+                        style={{ color: "red", cursor: "pointer" }}
+                        onClick={() => handleClick(item)}
+                      />
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
@@ -135,6 +115,11 @@ function List({ type }) {
         setOpen={setOpen}
         product={product}
         handleDelete={handleDelete}
+      />
+      <AdditionModal
+        openAddition={openAddition}
+        setOpenAddition={setOpenAddition}
+        product={product}
       />
     </>
   );
