@@ -1,108 +1,91 @@
-import "./list.scss";
+import { Link, Navigate, useParams } from "react-router-dom";
 
-import { Link } from "react-router-dom";
-import { FaTrash, FaEdit } from "react-icons/fa";
-import { useState } from "react";
-import DeleteModal from "../modal/DeleteModal";
+import "./list.scss";
+import { FaEdit } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import { GetProductFeatures } from "../../../config/newReguest";
+import Loader from "../Loader";
 
 function FeatureList() {
-  const [open, setOpen] = useState(false);
-  const [product, setProduct] = useState();
+  const { id } = useParams();
 
-  const handleClick = (value) => {
-    setProduct(value);
-    setOpen(true);
-  };
-  const handleDelete = () => {
-    alert(product);
-  };
+  const { isLoading, data, error } = useQuery({
+    queryKey: ["features"],
+    queryFn: () => GetProductFeatures(id),
+    staleTime: 60000,
+  });
+
+  if (error)
+    return (
+      <Navigate
+        to="/errorpage"
+        state={{ error: error.message }}
+        replace={true}
+      />
+    );
+
   return (
     <div className="products">
-      <main className="table">
-        <section className="table__header">
-          <h1>Qurudulmuş almanın xüsusiyyətləri</h1>
-        </section>
-        <section className="table__body">
-          <table>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Xassə</th>
-                <th>Tarix</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td> 1 </td>
-                <td>Qurudulmuş alma dilimləri.</td>
-                <td> 17 Dec, 2022 </td>
-
-                <td style={{ minWidth: "200px" }}>
-                  <Link to="/edit-product/12">
-                    <FaEdit style={{ marginRight: "15px", color: "gold" }} />
-                  </Link>
-                  <FaTrash
-                    style={{ color: "red" }}
-                    onClick={() => handleClick("xassse1")}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td> 1 </td>
-                <td>Qurudulmuş alma dilimləri.</td>
-                <td> 17 Dec, 2022 </td>
-
-                <td style={{ minWidth: "200px" }}>
-                  <Link to="/edit-product/12">
-                    <FaEdit style={{ marginRight: "15px", color: "gold" }} />
-                  </Link>
-                  <FaTrash
-                    style={{ color: "red" }}
-                    onClick={() => handleClick("xassse1")}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td> 1 </td>
-                <td>Qurudulmuş alma dilimləri.</td>
-                <td> 17 Dec, 2022 </td>
-
-                <td style={{ minWidth: "200px" }}>
-                  <Link to="/edit-product/12">
-                    <FaEdit style={{ marginRight: "15px", color: "gold" }} />
-                  </Link>
-                  <FaTrash
-                    style={{ color: "red" }}
-                    onClick={() => handleClick("xassse1")}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td> 1 </td>
-                <td>Qurudulmuş alma dilimləri.</td>
-                <td> 17 Dec, 2022 </td>
-
-                <td style={{ minWidth: "200px" }}>
-                  <Link to="/edit-product/12">
-                    <FaEdit style={{ marginRight: "15px", color: "gold" }} />
-                  </Link>
-                  <FaTrash
-                    style={{ color: "red" }}
-                    onClick={() => handleClick("xassse1")}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-      </main>
-      <DeleteModal
-        open={open}
-        setOpen={setOpen}
-        product={product}
-        handleDelete={handleDelete}
-      />
+      {isLoading ? (
+        <div
+          className="d-flex align-items-center justify-content-center w-100"
+          style={{ height: "200px" }}
+        >
+          <Loader />
+        </div>
+      ) : (
+        <main className="table">
+          <section className="table__header">
+            <h1>{data.feature_title}</h1>
+          </section>
+          <section className="table__body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Xassə</th>
+                  <th>Tarix</th>
+                  <th>Düzənlə</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  (data.features.length == 0 ? (
+                    <div
+                      className="d-flex align-items-center justify-content-center w-100"
+                      style={{ height: "100px" }}
+                    >
+                      {console.log(data.features.length)}
+                      Xüsusiyyət əlavə edilməyib!
+                    </div>
+                  ) : (
+                    data.features.map((feature) => (
+                      <tr key={feature.id}>
+                        <td> {feature.id} </td>
+                        <td>{feature.text}</td>
+                        <td className="text-center">
+                          {feature.created_at
+                            ? feature.created_at.split("T")[0]
+                            : "-"}
+                        </td>
+                        <td
+                          style={{ minWidth: "100px" }}
+                          className="text-center"
+                        >
+                          <Link to={`/edit-product/${id}`}>
+                            <FaEdit
+                              style={{ marginRight: "15px", color: "gold" }}
+                            />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  ))}
+              </tbody>
+            </table>
+          </section>
+        </main>
+      )}
     </div>
   );
 }

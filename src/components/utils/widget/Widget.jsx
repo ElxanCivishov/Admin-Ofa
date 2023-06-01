@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import "./widget.scss";
-
 import { MdFormatListBulletedAdd } from "react-icons/md";
+import "./widget.scss";
 
 const Widget = ({ type, count }) => {
   let data;
@@ -91,7 +90,7 @@ const Widget = ({ type, count }) => {
   return (
     <div className="widget">
       <div className="left">
-        <span className="title">{data.title}</span>
+        <span className="title text-muted">{data.title}</span>
         <span className={count > 0 ? "counter positive" : "counter negative"}>
           {count}
         </span>

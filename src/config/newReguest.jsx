@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const newRequest = axios.create({
+const NewRequest = axios.create({
   baseURL: "https://api.ofa.az/api",
 });
 
@@ -10,7 +10,7 @@ const headers = {
   Authorization: `Bearer ${currentUser.token}`,
 };
 
-export default newRequest;
+export default NewRequest;
 
 const setAuthorizationToken = () => {
   try {
@@ -27,7 +27,7 @@ const setAuthorizationToken = () => {
 };
 
 export const RequestLogin = async ({ email, password }) => {
-  const response = await newRequest.post("/login", {
+  const response = await NewRequest.post("/login", {
     email,
     password,
   });
@@ -36,32 +36,42 @@ export const RequestLogin = async ({ email, password }) => {
 
 export const RequestLogout = async () => {
   const token = currentUser.token.split("|")[0];
-  const response = await newRequest.post("/logout", { token }, { headers });
+  const response = await NewRequest.post("/logout", { token }, { headers });
   return response;
 };
 
 export const GetDryFruits = async () => {
-  const response = await newRequest.get("/az/products?search=dryfruits");
+  const response = await NewRequest.get("/az/products?search=dryfruits");
   return response.data;
 };
 
 export const GetJams = async () => {
-  const response = await newRequest.get("/az/products?search=jams");
+  const response = await NewRequest.get("/az/products?search=jams");
   return response.data;
 };
 
 export const GetPackageProducts = async () => {
-  const response = await newRequest.get("/az/products?search=packagefruits");
+  const response = await NewRequest.get("/az/products?search=packagefruits");
   return response.data;
 };
 
-export const GetGallery = async () => {
-  const response = await newRequest.get("/gallery");
+export const GetProductFeatures = async (id) => {
+  const response = await NewRequest.get(`/az/products/${id}`);
   return response.data;
 };
 
-export const AddGallery = async (formData) => {
-  const response = await newRequest.post("/gallery", formData, {
+export const GetRecipes = async () => {
+  const response = await NewRequest.get("/az/recipes");
+  return response.data;
+};
+
+export const GetRecipe = async (id) => {
+  const response = await NewRequest.get(`/recipes/${id}`);
+  return response.data;
+};
+
+export const AddRecipe = async (state) => {
+  const response = await NewRequest.post("/recipes", state, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${currentUser.token}`,
@@ -70,8 +80,54 @@ export const AddGallery = async (formData) => {
   return response;
 };
 
-export const deleteGallery = async () => {
+export const DeleteRecipe = async (id) => {
   const headers = setAuthorizationToken();
-  const response = await newRequest.get(`/gallery/24`, { headers });
+  const response = await NewRequest.delete(`/recipes/${id}`, { headers });
+  return response;
+};
+
+export const UpdateRecipe = async ({ id, state }) => {
+  console.log(state.image);
+  const headers = setAuthorizationToken();
+  const response = await NewRequest.put(`/recipes/${id}`, state, {
+    headers,
+  });
+  return response;
+};
+
+export const AddProduct = async (state) => {
+  const response = await NewRequest.post("/products", state, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${currentUser.token}`,
+    },
+  });
+  return response;
+};
+
+export const DeleteProduct = async (id) => {
+  const headers = setAuthorizationToken();
+  const response = await NewRequest.delete(`/products/${id}`, { headers });
+  return response;
+};
+
+export const GetGallery = async () => {
+  const response = await NewRequest.get("/gallery");
+  return response.data;
+};
+
+export const AddGallery = async (formData) => {
+  const response = await NewRequest.post("/gallery", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${currentUser.token}`,
+    },
+  });
+  return response;
+};
+
+export const DeleteGallery = async (id) => {
+  const headers = setAuthorizationToken();
+  const response = await NewRequest.delete(`/gallery/${id}`, { headers });
   return response;
 };

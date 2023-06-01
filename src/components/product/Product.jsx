@@ -1,12 +1,13 @@
-import { BiCloudUpload } from "react-icons/bi";
-import { FaTrash } from "react-icons/fa";
-import "./products.scss";
-import { Button, Col, Form, Image, Row, ListGroup } from "react-bootstrap";
 import { useReducer, useState } from "react";
 import { ProductsReducer, initialState } from "../../reducers/ProductsReducer";
-import { useMutation } from "@tanstack/react-query";
-
+import { AddProduct } from "../../config/newReguest";
+import { BiCloudUpload } from "react-icons/bi";
+import { FaTrash } from "react-icons/fa";
+import { Button, Col, Form, Image, Row, ListGroup } from "react-bootstrap";
 import noimage from "/img/noImage.png";
+import "./product.scss";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const Product = () => {
   const [state, dispatch] = useReducer(ProductsReducer, initialState);
@@ -14,6 +15,8 @@ const Product = () => {
   const [azFeature, setAzFeature] = useState("");
   const [enFeature, setEnFeature] = useState("");
   const [ruFeature, setRuFeature] = useState("");
+
+  const [focused, setFocused] = useState(false);
 
   const {
     category,
@@ -38,11 +41,46 @@ const Product = () => {
     ruAddition,
   } = state;
 
-  const { mutate } = useMutation((formData) => console.log(formData));
+  const queryClient = useQueryClient();
 
-  const handleSubmit = (e) => {
+  const mutation = useMutation({
+    mutationFn: () => AddProduct(state),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dryFruits"] });
+      queryClient.invalidateQueries({ queryKey: ["jams"] });
+      queryClient.invalidateQueries({ queryKey: ["packageProducts"] });
+      toast.success("Məhsul yükləndi!");
+      dispatch({ type: "RESET_STATE" });
+      setFocused(false);
+      setPreviewImage(null);
+    },
+    onError: () => {
+      toast.error("Məhsul yüklənmədi!");
+    },
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    mutate(state);
+    if (!previewImage) {
+      toast.warning("Şəkil seçin!");
+    } else if (
+      category !== "" &&
+      price !== "" &&
+      azContent !== "" &&
+      azTitle !== "" &&
+      azComposition !== "" &&
+      enTitle !== "" &&
+      enContent !== "" &&
+      enComposition !== "" &&
+      ruTitle !== "" &&
+      ruContent !== "" &&
+      ruComposition !== ""
+    ) {
+      mutation.mutate(state);
+    } else {
+      setFocused(true);
+      toast.warning("Lazımlı xanalar doldurulmalıdır!");
+    }
   };
 
   const handleChange = (field, value) => {
@@ -50,27 +88,47 @@ const Product = () => {
   };
 
   const handleAzFeature = () => {
-    dispatch({
-      type: "AZ_ADD_FEATURE",
-      payload: azFeature,
-    });
-    setAzFeature("");
+    if (azFeature) {
+      dispatch({
+        type: "AZ_ADD_FEATURE",
+        payload: azFeature,
+      });
+      setAzFeature("");
+    } else {
+      toast.error("Xüsusiyyət daxil edin!");
+    }
   };
 
   const handleRuFeature = () => {
-    dispatch({
-      type: "RU_ADD_FEATURE",
-      payload: ruFeature,
-    });
-    setRuFeature("");
+    if (ruFeature) {
+      dispatch({
+        type: "RU_ADD_FEATURE",
+        payload: ruFeature,
+      });
+      setRuFeature("");
+    } else {
+      toast.error("Xüsusiyyət daxil edin!");
+    }
   };
 
   const handleEnFeature = () => {
-    dispatch({
-      type: "EN_ADD_FEATURE",
-      payload: enFeature,
-    });
-    setEnFeature("");
+    if (enFeature) {
+      dispatch({
+        type: "EN_ADD_FEATURE",
+        payload: enFeature,
+      });
+      setEnFeature("");
+    } else {
+      toast.error("Xüsusiyyət daxil edin!");
+    }
+  };
+
+  const handleBlur = (event) => {
+    if (event.target.value == "") {
+      event.target.style.borderColor = "red";
+    } else {
+      event.target.style.borderColor = "#ced4da";
+    }
   };
 
   const handleImagePreview = (e) => {
@@ -78,56 +136,71 @@ const Product = () => {
     setPreviewImage(URL.createObjectURL(file));
   };
 
-  console.log(state);
+  const handleImageDelete = () => {
+    setPreviewImage(null);
+  };
 
   return (
-    <div className="products">
-      <h1 className="title">Yeni məhsul</h1>
-      <hr />
-      <Form onSubmit={(e) => handleSubmit(e)}>
-        <Row className="mt-5">
-          <Col xs={12} md={6}>
-            <Form.Group className="mb-3" controlId="upload-image">
-              <Form.Label className="upload-image">
-                <span>Şəkil yüklə </span>
-                <BiCloudUpload className="upload-icon" />
-              </Form.Label>
-              <Form.Control
-                type="file"
-                accept="image/*"
-                className="d-none"
-                onChange={(e) => {
-                  handleChange("image", e.target.files[0]);
-                  handleImagePreview(e);
-                }}
+    <div className="product">
+      <Form onSubmit={(e) => handleSubmit(e)} className="shadow p-4" noValidate>
+        <h1 className="title">Yeni məhsul</h1>
+        <hr />
+        <Row className="mt-5 flex-column">
+          <Col xs={12} md={4}>
+            <Form.Group
+              className="mb-1 d-flex align-items-center justify-content-between"
+              controlId="uploadImage"
+            >
+              <Form.Group controlId="upload-image">
+                <Form.Label className="d-flex align-items-center">
+                  <span>Şəkil yüklə </span>
+                  <BiCloudUpload className="fs-3 me-2 ms-2" />
+                </Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*"
+                  className="d-none"
+                  onChange={(e) => {
+                    handleChange("image", e.target.files[0]);
+                    handleImagePreview(e);
+                  }}
+                />
+              </Form.Group>
+              <FaTrash
+                className="text-danger"
+                style={{ cursor: "pointer" }}
+                onClick={() => handleImageDelete()}
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row className="mt-3 mb-3">
-          <Col xs={12} md={6}>
+          <Col xs={12} md={4}>
             <Image
-              style={{ maxWidth: "300px" }}
               src={previewImage || noimage}
               rounded
+              className="w-100"
+              style={{ maxHeight: "300px" }}
             />
           </Col>
         </Row>
+
         <Row className="mt-3 mb-3">
           <Col xs={12} md={4}>
             <Form.Group className="mb-3" controlId="category">
               <Form.Label>Kategoriya seçin</Form.Label>
               <Form.Select
                 aria-label="select categories"
+                className={focused && "invalid"}
                 value={category}
                 onChange={(e) => handleChange("category", e.target.value)}
+                onBlur={(event) => handleBlur(event)}
+                required
               >
                 <option value="" disabled>
                   Kateqoriya seçin...
                 </option>
-                <option value="dryFruits">Qurudulmuş meyvələr</option>
-                <option value="jams">Mürəbbə və cemlər</option>
-                <option value="packageProducts">Paket məhsullar</option>
+                <option value="Dryfruits">Qurudulmuş meyvələr</option>
+                <option value="Jams">Mürəbbə və cemlər</option>
+                <option value="Packagefruits">Paket məhsullar</option>
               </Form.Select>
             </Form.Group>
           </Col>
@@ -136,20 +209,28 @@ const Product = () => {
               <Form.Label>Qiymət</Form.Label>
               <Form.Control
                 type="number"
+                className={focused && "invalid"}
                 value={price}
                 onChange={(e) => handleChange("price", e.target.value)}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
           </Col>
         </Row>
+
         <Row className="mt-3 mb-3">
           <Col xs={12} md={4}>
+            <hr className="mt-3 mb-3 w-100" />
             <Form.Label className="product-lang">Az dilində</Form.Label>
             <Form.Group className="mb-3" controlId="az-title">
               <Form.Label>Məhsul adı</Form.Label>
               <Form.Control
+                className={focused && "invalid"}
                 value={azTitle}
                 onChange={(e) => handleChange("azTitle", e.target.value)}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
 
@@ -160,6 +241,9 @@ const Product = () => {
                 style={{ height: "150px" }}
                 value={azContent}
                 onChange={(e) => handleChange("azContent", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="az-content">
@@ -167,6 +251,9 @@ const Product = () => {
               <Form.Control
                 value={azComposition}
                 onChange={(e) => handleChange("azComposition", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="az-feature-title">
@@ -184,13 +271,17 @@ const Product = () => {
                 value={azFeature}
                 onChange={(e) => setAzFeature(e.target.value)}
               />
-              <Button className="me-2 ms-2" onClick={() => handleAzFeature()}>
+              <Button
+                className="me-2 ms-2"
+                variant="success"
+                onClick={() => handleAzFeature()}
+              >
                 +
               </Button>
             </Form.Group>
 
             <ListGroup as="ol">
-              {state?.azFeatures?.map((f) => (
+              {azFeatures?.map((f) => (
                 <ListGroup.Item
                   key={f}
                   as="li"
@@ -198,7 +289,7 @@ const Product = () => {
                 >
                   <div className="ms-2 me-auto">{f}</div>
                   <FaTrash
-                    bg="primary"
+                    className="delete-icon"
                     onClick={() =>
                       dispatch({ type: "AZ_REMOVE_FEATURE", payload: f })
                     }
@@ -217,12 +308,16 @@ const Product = () => {
             </Form.Group>
           </Col>
           <Col xs={12} md={4}>
+            <hr className="mt-3 mb-3 w-100" />
             <Form.Label className="product-lang">Engilis</Form.Label>
             <Form.Group className="mb-3" controlId="en-title">
               <Form.Label>Product name</Form.Label>
               <Form.Control
                 value={enTitle}
                 onChange={(e) => handleChange("enTitle", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
 
@@ -233,6 +328,9 @@ const Product = () => {
                 style={{ height: "150px" }}
                 value={enContent}
                 onChange={(e) => handleChange("enContent", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="en-content">
@@ -240,6 +338,9 @@ const Product = () => {
               <Form.Control
                 value={enComposition}
                 onChange={(e) => handleChange("enComposition", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="en-feature-title">
@@ -257,13 +358,17 @@ const Product = () => {
                 value={enFeature}
                 onChange={(e) => setEnFeature(e.target.value)}
               />
-              <Button className="me-2 ms-2" onClick={() => handleEnFeature()}>
+              <Button
+                variant="success"
+                className="me-2 ms-2"
+                onClick={() => handleEnFeature()}
+              >
                 +
               </Button>
             </Form.Group>
 
             <ListGroup as="ol">
-              {state?.enFeatures?.map((f) => (
+              {enFeatures?.map((f) => (
                 <ListGroup.Item
                   key={f}
                   as="li"
@@ -271,7 +376,7 @@ const Product = () => {
                 >
                   <div className="ms-2 me-auto">{f}</div>
                   <FaTrash
-                    bg="primary"
+                    className="delete-icon"
                     onClick={() =>
                       dispatch({ type: "EN_REMOVE_FEATURE", payload: f })
                     }
@@ -290,12 +395,16 @@ const Product = () => {
             </Form.Group>
           </Col>{" "}
           <Col xs={12} md={4}>
+            <hr className="mt-3 mb-3 w-100" />
             <Form.Label className="product-lang">Русский</Form.Label>
             <Form.Group className="mb-3" controlId="ru-title">
               <Form.Label>Название продукта</Form.Label>
               <Form.Control
                 value={ruTitle}
                 onChange={(e) => handleChange("ruTitle", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
 
@@ -306,6 +415,9 @@ const Product = () => {
                 style={{ height: "150px" }}
                 value={ruContent}
                 onChange={(e) => handleChange("ruContent", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="ru-content">
@@ -313,6 +425,9 @@ const Product = () => {
               <Form.Control
                 value={ruComposition}
                 onChange={(e) => handleChange("ruComposition", e.target.value)}
+                className={focused && "invalid"}
+                onBlur={(event) => handleBlur(event)}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="ru-feature-title">
@@ -330,13 +445,17 @@ const Product = () => {
                 value={ruFeature}
                 onChange={(e) => setRuFeature(e.target.value)}
               />
-              <Button className="me-2 ms-2" onClick={() => handleRuFeature()}>
+              <Button
+                variant="success"
+                className="me-2 ms-2"
+                onClick={() => handleRuFeature()}
+              >
                 +
               </Button>
             </Form.Group>
 
             <ListGroup as="ol">
-              {state?.ruFeatures?.map((f) => (
+              {ruFeatures?.map((f) => (
                 <ListGroup.Item
                   key={f}
                   as="li"
@@ -344,7 +463,7 @@ const Product = () => {
                 >
                   <div className="ms-2 me-auto">{f}</div>
                   <FaTrash
-                    bg="primary"
+                    className="delete-icon"
                     onClick={() =>
                       dispatch({ type: "RU_REMOVE_FEATURE", payload: f })
                     }

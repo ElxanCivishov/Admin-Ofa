@@ -37,19 +37,35 @@
     }
   }
 
+  .table__body {
+    width: 95%;
+    max-height: calc(89% - 1.6rem);
+    background-color: #fffb;
+    margin: 0.8rem auto;
+    overflow: auto;
+    overflow: overlay;
+    text-align: start;
+    border-radius: 0.6rem;
+    -webkit-border-radius: 0.6rem;
+    -moz-border-radius: 0.6rem;
+    -ms-border-radius: 0.6rem;
+    -o-border-radius: 0.6rem;
+  }
+
   .recipes__body {
     width: 100%;
     max-height: calc(89% - 1.6rem);
     background-color: #fffb;
     margin: 0.8rem auto;
     border-radius: 0.6rem;
+    overflow: auto;
+    overflow: overlay;
     -webkit-border-radius: 0.6rem;
     -moz-border-radius: 0.6rem;
     -ms-border-radius: 0.6rem;
     -o-border-radius: 0.6rem;
-    overflow: auto;
-    overflow: overlay;
-    &:-webkit-scrollbar {
+
+    &::-webkit-scrollbar {
       width: 0.5rem;
       height: 0.5rem;
     }
@@ -58,10 +74,6 @@
       border-radius: 0.5rem;
       background-color: rgb(15, 179, 45);
       visibility: hidden;
-      -webkit-border-radius: 0.5rem;
-      -moz-border-radius: 0.5rem;
-      -ms-border-radius: 0.5rem;
-      -o-border-radius: 0.5rem;
     }
 
     &:hover::-webkit-scrollbar-thumb {
@@ -74,10 +86,9 @@
   }
 
   td img {
-    width: 36px;
-    height: 36px;
+    width: 80px;
+    height: 80px;
     margin-right: 0.5rem;
-    border-radius: 50%;
     vertical-align: middle;
   }
 

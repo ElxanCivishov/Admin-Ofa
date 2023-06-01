@@ -1,12 +1,16 @@
-import "./list.scss";
+import { Link } from "react-router-dom";
+
+import { FaEye, FaTrash, FaEdit } from "react-icons/fa";
+import { MdAdd, MdPreview } from "react-icons/md";
+import DeleteModal from "../modal/DeleteModal";
+import AdditionModal from "../modal/AdditionModal";
 import noImage from "/img/noImage.png";
 
-import { Link } from "react-router-dom";
-import { FaEye, FaTrash, FaEdit } from "react-icons/fa";
+import "./list.scss";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { DeleteProduct } from "../../../config/newReguest";
+import { toast } from "react-toastify";
 import { useState } from "react";
-import DeleteModal from "../modal/DeleteModal";
-import { MdAdd, MdPreview } from "react-icons/md";
-import AdditionModal from "../modal/AdditionModal";
 
 function List({ type, data }) {
   const [open, setOpen] = useState(false);
@@ -17,14 +21,33 @@ function List({ type, data }) {
     setProduct(value);
     setOpen(true);
   };
-  const handleDelete = () => {
-    alert(product);
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (id) => DeleteProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dryFruits"] });
+      queryClient.invalidateQueries({ queryKey: ["jams"] });
+      queryClient.invalidateQueries({ queryKey: ["packageProducts"] });
+      toast.success("Məhsul silindi!");
+      setProduct();
+      setOpen(false);
+    },
+    onError: () => {
+      toast.error("Məhsul silinmədi!");
+    },
+  });
+
+  const handleDelete = async (id) => {
+    mutation.mutate(id);
   };
+
   return (
     <>
       <main className="table">
-        <div className="table__header">
-          <h1>{type}</h1>
+        <div className="table__header mt-3">
+          <h1 className="text-muted">{type}</h1>
           <Link className="link" to="/add-product">
             <span>
               Yeni məhsul <MdAdd />
@@ -42,7 +65,7 @@ function List({ type, data }) {
                 <th>Xüsusiyyət başlığı</th>
                 <th>Xüsusiyyətlər</th>
                 <th>Əlavə mətn</th>
-                <th>Tarix</th>
+                <th className="text-center"> Tarix</th>
                 <th>Qiymət</th>
                 <th>Action</th>
               </tr>
@@ -87,7 +110,7 @@ function List({ type, data }) {
                       />
                     </td>
                     <td style={{ minWidth: "150px", textAlign: "center" }}>
-                      {item.created_at || "-"}
+                      {item.created_at ? item.created_at.split("T")[0] : "-"}
                     </td>
                     <td style={{ textAlign: "center" }}>
                       <strong>{item.price}</strong>

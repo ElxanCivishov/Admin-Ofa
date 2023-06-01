@@ -1,10 +1,10 @@
 import { useState } from "react";
-import "./login.scss";
 import { RequestLogin } from "../../config/newReguest";
 import { Navigate, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLoggedIn } from "../../config/Hooks";
+import { toast } from "react-toastify";
+import "./login.scss";
 
 function Login() {
   const [email, setEmail] = useState("");

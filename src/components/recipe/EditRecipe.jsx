@@ -1,37 +1,55 @@
-import { useReducer, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useReducer, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { GetRecipe, UpdateRecipe } from "../../config/newReguest";
 import { RecipesReducer, initialState } from "../../reducers/RecipesReducer";
-import { AddRecipe } from "../../config/newReguest";
-
 import { BiCloudUpload } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
-import { Col, Form, Image, Row } from "react-bootstrap";
-
+import { Button, Col, Form, Image, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import noimage from "/img/noImage.png";
 import "./recipe.scss";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function Recipe() {
+export default function EditRecipe() {
+  const navigate = useNavigate();
+
   const [state, dispatch] = useReducer(RecipesReducer, initialState);
-  const [previewImage, setPreviewImage] = useState(null);
-  const [focused, setFocused] = useState(false);
-
   const { azTitle, azContent, enTitle, enContent, ruTitle, ruContent } = state;
+  const { id } = useParams();
+  const [focused, setFocused] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    const getRecipe = async () => {
+      try {
+        const res = await GetRecipe(id);
+        setPreviewImage(res.image);
+        dispatch({ type: "SET_DATA", payload: res });
+      } catch (error) {
+        <Navigate
+          to="/errorpage"
+          state={{ error: error.message }}
+          replace={true}
+        />;
+      }
+    };
+
+    getRecipe();
+  }, []);
+
   const mutation = useMutation({
-    mutationFn: () => AddRecipe(state),
+    mutationFn: () => UpdateRecipe({ state, id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["recipes"] });
-      toast.success("Resept yükləndi!");
-      dispatch({ type: "RESET_STATE" });
+      toast.success("Resept Düzənləndi!");
       setFocused(false);
-      setPreviewImage(null);
+      navigate("/recipes");
     },
     onError: () => {
-      toast.error("Resept yüklənmədi!");
+      toast.error("Resept Düzənlənmədi!");
     },
   });
 
@@ -47,7 +65,7 @@ export default function Recipe() {
       ruTitle !== "" &&
       ruContent !== ""
     ) {
-      mutation.mutate(state);
+      mutation.mutate();
     } else {
       setFocused(true);
       toast.warning("Bütün xanalar doldurulmalıdır!");
@@ -67,12 +85,21 @@ export default function Recipe() {
   };
 
   const handleImagePreview = (e) => {
+    const reader = new FileReader();
     const file = e.target.files[0];
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      const imgUrlBase64 = reader.result;
+      handleChange("image", imgUrlBase64);
+    };
+
     setPreviewImage(URL.createObjectURL(file));
   };
 
   const handleImageDelete = () => {
     setPreviewImage(null);
+    handleChange("image", "");
   };
 
   return (
@@ -81,9 +108,10 @@ export default function Recipe() {
         <Form
           onSubmit={(e) => handleSubmit(e)}
           className="shadow p-4"
+          encType="multipart/form-data"
           noValidate
         >
-          <h1>Yeni resept</h1>
+          <h1>Resepti düzənlə</h1>
           <Row className="mt-5 flex-column">
             <Col xs={12} md={4}>
               <Form.Group
@@ -100,7 +128,6 @@ export default function Recipe() {
                     accept="image/*"
                     className="d-none"
                     onChange={(e) => {
-                      handleChange("image", e.target.files[0]);
                       handleImagePreview(e);
                     }}
                   />
@@ -108,7 +135,9 @@ export default function Recipe() {
                 <FaTrash
                   className="text-danger"
                   style={{ cursor: "pointer" }}
-                  onClick={() => handleImageDelete()}
+                  onClick={() => {
+                    handleImageDelete();
+                  }}
                 />
               </Form.Group>
             </Col>
@@ -129,10 +158,10 @@ export default function Recipe() {
               <Form.Group className="mb-3" controlId="azTitle">
                 <Form.Label>Başlıq</Form.Label>
                 <Form.Control
-                  className={focused && "invalid"}
                   value={azTitle}
                   onChange={(e) => handleChange("azTitle", e.target.value)}
                   onBlur={(event) => handleBlur(event)}
+                  className={focused && "invalid"}
                   required
                 />
               </Form.Group>
@@ -142,9 +171,9 @@ export default function Recipe() {
                   as="textarea"
                   style={{ height: "150px" }}
                   value={azContent}
-                  className={focused && "invalid"}
                   onChange={(e) => handleChange("azContent", e.target.value)}
                   onBlur={(event) => handleBlur(event)}
+                  className={focused && "invalid"}
                   required
                 />
               </Form.Group>
@@ -202,12 +231,9 @@ export default function Recipe() {
           </Row>
 
           <Col className="text-center mt-3 mb-3">
-            <button
-              className="btn btn-outline-success btn-not-allowed"
-              type="submit"
-            >
-              Əlavə et
-            </button>
+            <Button variant="outline-success" type="submit">
+              Yenilə
+            </Button>
           </Col>
         </Form>
       </div>

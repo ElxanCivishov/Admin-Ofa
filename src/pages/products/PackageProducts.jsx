@@ -1,10 +1,10 @@
-import "./products.scss";
 import List from "../../components/utils/list/List";
 import { useQuery } from "@tanstack/react-query";
-
 import { Navigate } from "react-router-dom";
-import Loader from "../../components/utils/Loader";
 import { GetPackageProducts } from "../../config/newReguest";
+import Loader from "../../components/utils/Loader";
+
+import "./products.scss";
 
 const PackageProducts = () => {
   const { isLoading, data, error } = useQuery({

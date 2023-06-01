@@ -42,10 +42,6 @@ export default function DeleteModal({ open, setOpen, product, handleDelete }) {
           </Typography>
           {product && (
             <>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <b>Id: </b>
-                <span>{product.id}</span>
-              </Typography>
               {product.title && (
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                   <b>Başlıq: </b>
@@ -70,7 +66,7 @@ export default function DeleteModal({ open, setOpen, product, handleDelete }) {
               size="small"
               color="error"
               sx={{ m: 1, mt: 2 }}
-              onClick={() => handleDelete(24)}
+              onClick={() => handleDelete(product.id)}
             >
               Sil
             </Button>

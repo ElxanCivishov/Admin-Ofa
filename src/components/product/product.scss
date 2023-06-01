@@ -1,0 +1,43 @@
+.product {
+  padding: 20px;
+  .title {
+    font-size: 20px;
+    color: grey;
+    font-weight: 600;
+    width: max-content;
+  }
+  hr {
+    width: 200px;
+    color: grey;
+  }
+  .product-lang {
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .delete-icon {
+    color: rgb(186, 21, 21);
+    cursor: pointer;
+  }
+
+  input {
+    &:invalid:focus {
+      box-shadow: none;
+    }
+  }
+
+  input.invalid,
+  select.invalid,
+  textarea.invalid {
+    &:invalid {
+      box-shadow: none;
+      outline: none;
+      border: 1px solid red;
+    }
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+}

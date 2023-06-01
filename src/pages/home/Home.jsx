@@ -32,7 +32,6 @@ const Home = () => {
   return (
     <div className="home">
       <div className="widget-wrapper">
-        {/* {console.log(GetPackageProductsCount)} */}
         <Widget type="dryFruits" count="200" />
         <Widget type="jams" count="0" />
         <Widget type="packageProducts" count="35" />

@@ -1,10 +1,9 @@
-import "./products.scss";
-import List from "../../components/utils/list/List";
 import { useQuery } from "@tanstack/react-query";
-
 import { Navigate } from "react-router-dom";
 import Loader from "../../components/utils/Loader";
+import List from "../../components/utils/list/List";
 import { GetDryFruits } from "../../config/newReguest";
+import "./products.scss";
 
 const DryFruits = () => {
   const { isLoading, data, error } = useQuery({

@@ -2,7 +2,6 @@ export const initialState = {
   image: "",
   category: "",
   price: "",
-
   azTitle: "",
   azMainText: "",
   azContent: "",
@@ -61,6 +60,9 @@ export const ProductsReducer = (state, action) => {
           (feature) => feature !== action.payload
         ),
       };
+
+    case "RESET_STATE":
+      return initialState;
 
     default:
       return state;

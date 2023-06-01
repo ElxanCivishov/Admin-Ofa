@@ -1,13 +1,16 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Navigate, Outlet } from "react-router-dom";
-import Sidebar from "../sidebar/Sidebar";
-import Navbar from "../navbar/Navbar";
+import { useState } from "react";
+
 import { useLoggedIn } from "../../config/Hooks";
 import { ToastContainer } from "react-toastify";
+import Loader from "../utils/Loader";
 import "react-toastify/dist/ReactToastify.css";
 
+import Sidebar from "../sidebar/Sidebar";
+import Navbar from "../navbar/Navbar";
+
 import "./layout.scss";
-import { useState } from "react";
 
 const MainLayout = () => {
   const queryClient = new QueryClient();
@@ -15,12 +18,15 @@ const MainLayout = () => {
 
   const [openSidebar, setOpenSidebar] = useState(true);
 
-  const handleCloseSideMenu = () => {
-    setOpenSidebar(false);
-  };
-
   if (isLoggedIn === null) {
-    return <h2 style={{ color: "black" }}>loading...</h2>;
+    return (
+      <div
+        className="d-flex align-items-center justify-content-center "
+        style={{ height: "400px" }}
+      >
+        <Loader />
+      </div>
+    );
   } else if (isLoggedIn === false) {
     return <Navigate replace to="/login" />;
   } else if (isLoggedIn === true) {

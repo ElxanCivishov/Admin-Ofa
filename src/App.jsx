@@ -11,19 +11,15 @@ import PackageProducts from "./pages/products/PackageProducts";
 import Gallery from "./pages/gallery/Gallery";
 import Recipes from "./pages/recipes/Recipes";
 import DryFruits from "./pages/products/DryFruits";
-import FeatureList from "./components/utils/list/featureList";
-import Product from "./pages/products/Product";
+import FeatureList from "./components/utils/list/FeatureList";
+import Product from "./components/product/Product";
 import Recipe from "./components/recipe/Recipe";
 import ErrorPage from "./pages/errorPage/ErrorPage";
 import NotFound from "./pages/notFound/NotFound";
-import Test from "./components/test";
+import EditRecipe from "./components/recipe/EditRecipe";
 
 function App() {
   const router = createBrowserRouter([
-    {
-      path: "/test",
-      element: <Test />,
-    },
     {
       path: "/login",
       element: <Login />,
@@ -85,7 +81,7 @@ function App() {
         },
         {
           path: "/recipe/:id",
-          element: <Recipe />,
+          element: <EditRecipe />,
         },
       ],
     },

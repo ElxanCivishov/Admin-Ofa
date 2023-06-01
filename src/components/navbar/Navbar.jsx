@@ -1,5 +1,10 @@
 import { useState } from "react";
-import "./navbar.scss";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { RequestLogout } from "../../config/newReguest";
+import { MdMenu } from "react-icons/md";
+import noImage from "/img/noImage.png";
 
 import {
   AppBar,
@@ -13,12 +18,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import noImage from "/img/noImage.png";
-import { useNavigate } from "react-router-dom";
-import { RequestLogout } from "../../config/newReguest";
-
-import { MdMenu } from "react-icons/md";
-import { toast } from "react-toastify";
+import "./navbar.scss";
 
 const Navbar = ({ openSidebar, setOpenSidebar }) => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;

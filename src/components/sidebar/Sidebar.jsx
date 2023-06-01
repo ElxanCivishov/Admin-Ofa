@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 import logo from "/img/logo.png";
 import favLogo from "/img/favicon.ico";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import "./sidebar.scss";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const Sidebar = ({ openSidebar }) => {
   return (
