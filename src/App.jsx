@@ -1,10 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
 
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 
-import "./App.css";
 import MainLayout from "./components/layout/MainLayout";
 import Jams from "./pages/products/Jams";
 import PackageProducts from "./pages/products/PackageProducts";
@@ -12,11 +12,12 @@ import Gallery from "./pages/gallery/Gallery";
 import Recipes from "./pages/recipes/Recipes";
 import DryFruits from "./pages/products/DryFruits";
 import FeatureList from "./components/utils/list/FeatureList";
-import Product from "./components/product/Product";
+import AddProduct from "./components/product/AddProduct";
 import Recipe from "./components/recipe/Recipe";
 import ErrorPage from "./pages/errorPage/ErrorPage";
 import NotFound from "./pages/notFound/NotFound";
 import EditRecipe from "./components/recipe/EditRecipe";
+import EditProduct from "./components/product/EditProduct";
 
 function App() {
   const router = createBrowserRouter([
@@ -24,10 +25,10 @@ function App() {
       path: "/login",
       element: <Login />,
     },
-    {
-      path: "/register",
-      element: <Register />,
-    },
+    // {
+    //   path: "/register",
+    //   element: <Register />,
+    // },
     {
       path: "/errorpage",
       element: <ErrorPage />,
@@ -60,11 +61,11 @@ function App() {
         },
         {
           path: "/add-product",
-          element: <Product />,
+          element: <AddProduct />,
         },
         {
           path: "/edit-product/:id",
-          element: <Product />,
+          element: <EditProduct />,
         },
         {
           path: "/gallery",

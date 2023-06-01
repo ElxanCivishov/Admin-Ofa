@@ -48,7 +48,7 @@ const Navbar = ({ openSidebar, setOpenSidebar }) => {
 
   return (
     <AppBar position="sticky" style={{ backgroundColor: "rgb(15, 179, 45)" }}>
-      <Container maxWidth="xl">
+      <Container maxWidth="xxl">
         <Toolbar
           disableGutters
           className="justify-content-between align-items-center"

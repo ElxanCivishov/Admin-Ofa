@@ -98,7 +98,7 @@ const Widget = ({ type, count }) => {
       <div className="right">
         {data.icon}
         <Link className="link" to={data.url}>
-          <sapan className="widget-link-text">{data.link}</sapan>
+          <span className="widget-link-text">{data.link}</span>
         </Link>
       </div>
     </div>

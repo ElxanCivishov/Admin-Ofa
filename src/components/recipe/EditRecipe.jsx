@@ -56,7 +56,7 @@ export default function EditRecipe() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!previewImage) {
-      toast.error("Şəkil seçin!");
+      toast.warning("Şəkil seçin!");
     } else if (
       azContent !== "" &&
       azTitle !== "" &&

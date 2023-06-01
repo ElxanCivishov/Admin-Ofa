@@ -1,6 +1,6 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { ProductsReducer, initialState } from "../../reducers/ProductsReducer";
-import { AddProduct } from "../../config/newReguest";
+import { GetProduct, UpdateProduct } from "../../config/newReguest";
 import { BiCloudUpload } from "react-icons/bi";
 import { FaTrash } from "react-icons/fa";
 import { Button, Col, Form, Image, Row, ListGroup } from "react-bootstrap";
@@ -8,13 +8,19 @@ import noimage from "/img/noImage.png";
 import "./product.scss";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
-const Product = () => {
+const EditProduct = () => {
   const [state, dispatch] = useReducer(ProductsReducer, initialState);
+  const navigate = useNavigate();
+  const { id } = useParams();
+
   const [previewImage, setPreviewImage] = useState(null);
-  const [azFeature, setAzFeature] = useState("");
-  const [enFeature, setEnFeature] = useState("");
-  const [ruFeature, setRuFeature] = useState("");
+  const [features, setFeatures] = useState({
+    azFeatures: "",
+    ruFeatures: "",
+    enFeatures: "",
+  });
 
   const [focused, setFocused] = useState(false);
 
@@ -43,16 +49,35 @@ const Product = () => {
 
   const queryClient = useQueryClient();
 
+  console.log(state);
+
+  useEffect(() => {
+    const getRecipe = async () => {
+      try {
+        const res = await GetProduct(id);
+        console.log(res);
+        setPreviewImage(res.image);
+        dispatch({ type: "SET_DATA", payload: res });
+      } catch (error) {
+        <Navigate
+          to="/errorpage"
+          state={{ error: error.message }}
+          replace={true}
+        />;
+      }
+    };
+
+    getRecipe();
+  }, []);
+
   const mutation = useMutation({
-    mutationFn: () => AddProduct(state),
+    mutationFn: () => UpdateProduct({ id, state }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dryFruits"] });
       queryClient.invalidateQueries({ queryKey: ["jams"] });
       queryClient.invalidateQueries({ queryKey: ["packageProducts"] });
-      toast.success("Məhsul yükləndi!");
-      dispatch({ type: "RESET_STATE" });
-      setFocused(false);
-      setPreviewImage(null);
+      toast.success("Məhsul düzənləndi!");
+      navigate("/recipes");
     },
     onError: () => {
       toast.error("Məhsul yüklənmədi!");
@@ -87,37 +112,23 @@ const Product = () => {
     dispatch({ type: "UPDATE_FIELD", field, value });
   };
 
-  const handleAzFeature = () => {
-    if (azFeature) {
-      dispatch({
-        type: "AZ_ADD_FEATURE",
-        payload: azFeature,
-      });
-      setAzFeature("");
-    } else {
-      toast.error("Xüsusiyyət daxil edin!");
-    }
+  const handleFeatures = (e) => {
+    setFeatures({ ...features, [e.target.name]: e.target.value });
   };
 
-  const handleRuFeature = () => {
-    if (ruFeature) {
-      dispatch({
-        type: "RU_ADD_FEATURE",
-        payload: ruFeature,
-      });
-      setRuFeature("");
-    } else {
-      toast.error("Xüsusiyyət daxil edin!");
-    }
-  };
-
-  const handleEnFeature = () => {
-    if (enFeature) {
-      dispatch({
-        type: "EN_ADD_FEATURE",
-        payload: enFeature,
-      });
-      setEnFeature("");
+  const addFeature = (field) => {
+    if (features[field]) {
+      if (state[field].includes(features[field])) {
+        toast.warning("Bu xüsusiyyət artıq mövcuddur!");
+        setFeatures({ ...features, [field]: "" });
+      } else {
+        dispatch({
+          type: "ADD_FEATURE",
+          field,
+          value: features[field],
+        });
+        setFeatures({ ...features, [field]: "" });
+      }
     } else {
       toast.error("Xüsusiyyət daxil edin!");
     }
@@ -132,18 +143,27 @@ const Product = () => {
   };
 
   const handleImagePreview = (e) => {
+    const reader = new FileReader();
     const file = e.target.files[0];
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      const imgUrlBase64 = reader.result;
+      handleChange("image", imgUrlBase64);
+    };
+
     setPreviewImage(URL.createObjectURL(file));
   };
 
   const handleImageDelete = () => {
     setPreviewImage(null);
+    handleChange("image", "");
   };
 
   return (
     <div className="product">
       <Form onSubmit={(e) => handleSubmit(e)} className="shadow p-4" noValidate>
-        <h1 className="title">Yeni məhsul</h1>
+        <h1 className="title">Məhsulu düzənlə</h1>
         <hr />
         <Row className="mt-5 flex-column">
           <Col xs={12} md={4}>
@@ -268,13 +288,14 @@ const Product = () => {
               controlId="az-features"
             >
               <Form.Control
-                value={azFeature}
-                onChange={(e) => setAzFeature(e.target.value)}
+                name="azFeatures"
+                value={features.azFeatures}
+                onChange={(e) => handleFeatures(e)}
               />
               <Button
                 className="me-2 ms-2"
                 variant="success"
-                onClick={() => handleAzFeature()}
+                onClick={() => addFeature("azFeatures")}
               >
                 +
               </Button>
@@ -355,13 +376,14 @@ const Product = () => {
               controlId="az-features"
             >
               <Form.Control
-                value={enFeature}
-                onChange={(e) => setEnFeature(e.target.value)}
+                name="enFeatures"
+                value={features.enFeatures}
+                onChange={(e) => handleFeatures(e)}
               />
               <Button
                 variant="success"
                 className="me-2 ms-2"
-                onClick={() => handleEnFeature()}
+                onClick={() => addFeature("enFeatures")}
               >
                 +
               </Button>
@@ -442,13 +464,14 @@ const Product = () => {
               controlId="az-features"
             >
               <Form.Control
-                value={ruFeature}
-                onChange={(e) => setRuFeature(e.target.value)}
+                name="ruFeatures"
+                value={features.ruFeatures}
+                onChange={(e) => handleFeatures(e)}
               />
               <Button
                 variant="success"
                 className="me-2 ms-2"
-                onClick={() => handleRuFeature()}
+                onClick={() => addFeature("ruFeatures")}
               >
                 +
               </Button>
@@ -484,7 +507,7 @@ const Product = () => {
         </Row>
         <Col className="text-center mt-3 mb-3">
           <Button variant="outline-success" type="submit">
-            Əlavə et
+            Yenilə
           </Button>
         </Col>
       </Form>
@@ -492,4 +515,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default EditProduct;

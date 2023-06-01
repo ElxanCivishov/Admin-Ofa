@@ -12,6 +12,7 @@ const headers = {
 
 export default NewRequest;
 
+// Auth token
 const setAuthorizationToken = () => {
   try {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -26,6 +27,7 @@ const setAuthorizationToken = () => {
   }
 };
 
+// Auth Crud
 export const RequestLogin = async ({ email, password }) => {
   const response = await NewRequest.post("/login", {
     email,
@@ -40,6 +42,7 @@ export const RequestLogout = async () => {
   return response;
 };
 
+// Products crud
 export const GetDryFruits = async () => {
   const response = await NewRequest.get("/az/products?search=dryfruits");
   return response.data;
@@ -60,6 +63,36 @@ export const GetProductFeatures = async (id) => {
   return response.data;
 };
 
+export const GetProduct = async (id) => {
+  const response = await NewRequest.get(`/products/${id}`);
+  return response.data;
+};
+
+export const AddProduct = async (state) => {
+  const response = await NewRequest.post("/products", state, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${currentUser.token}`,
+    },
+  });
+  return response;
+};
+
+export const DeleteProduct = async (id) => {
+  const headers = setAuthorizationToken();
+  const response = await NewRequest.delete(`/products/${id}`, { headers });
+  return response;
+};
+
+export const UpdateProduct = async ({ id, state }) => {
+  const headers = setAuthorizationToken();
+  const response = await NewRequest.put(`/products/${id}`, state, {
+    headers,
+  });
+  return response;
+};
+
+// Recipes crud
 export const GetRecipes = async () => {
   const response = await NewRequest.get("/az/recipes");
   return response.data;
@@ -87,7 +120,6 @@ export const DeleteRecipe = async (id) => {
 };
 
 export const UpdateRecipe = async ({ id, state }) => {
-  console.log(state.image);
   const headers = setAuthorizationToken();
   const response = await NewRequest.put(`/recipes/${id}`, state, {
     headers,
@@ -95,21 +127,7 @@ export const UpdateRecipe = async ({ id, state }) => {
   return response;
 };
 
-export const AddProduct = async (state) => {
-  const response = await NewRequest.post("/products", state, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${currentUser.token}`,
-    },
-  });
-  return response;
-};
-
-export const DeleteProduct = async (id) => {
-  const headers = setAuthorizationToken();
-  const response = await NewRequest.delete(`/products/${id}`, { headers });
-  return response;
-};
+// Gallery crud
 
 export const GetGallery = async () => {
   const response = await NewRequest.get("/gallery");

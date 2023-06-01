@@ -87,7 +87,6 @@ const Recipes = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {console.log(recipes.data)}
                   {recipes.data &&
                     recipes.data.map((recipe) => (
                       <tr key={recipe.id}>
