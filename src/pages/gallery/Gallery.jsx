@@ -1,19 +1,21 @@
-import "./gallery.scss";
-
-import { FaTrash } from "react-icons/fa";
+import { GetGallery, DeleteGallery } from "../../config/newReguest";
 import { useState } from "react";
-import DeleteModal from "../../components/utils/modal/DeleteModal";
-import noImage from "/img/noImage.png";
-import AddGalleryModal from "../../components/utils/modal/addgallery/AddGalleryModal";
 import { useQuery } from "@tanstack/react-query";
-import { GetGallery, deleteGallery } from "../../config/newReguest";
-import Loader from "../../components/utils/Loader";
 import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import Loader from "../../components/utils/Loader";
+import DeleteModal from "../../components/utils/modal/DeleteModal";
+import AddGalleryModal from "../../components/gallery/AddGalleryModal";
+import { FaTrash } from "react-icons/fa";
+
+import noImage from "/img/noImage.png";
+import "./gallery.scss";
 
 const Gallery = () => {
   const [open, setOpen] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [product, setProduct] = useState();
+  const [product, setProduct] = useState("");
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["gallery"],
@@ -46,11 +48,24 @@ const Gallery = () => {
     setOpen(true);
   };
 
+  const handleDelete = async (id) => {
+    await DeleteGallery(id)
+      .then(() => {
+        toast.success("Şəkil silindi!");
+        setProduct("");
+        setOpen(false);
+        refetch();
+      })
+      .catch(() => {
+        toast.error("Şəkil silinmədi!");
+      });
+  };
+
   return (
     <>
-      <div className="gallery">
+      <div className="gallery shadow p-4 mt-4 mb-4">
         <div className="title">
-          <h2>Qalareya</h2>
+          <h2 className="text-muted">Qalareya</h2>
           <button className="btn add-btn" onClick={() => setOpenAddModal(true)}>
             Yeni şəkil
           </button>
@@ -59,10 +74,9 @@ const Gallery = () => {
           {data &&
             data.map((image) => (
               <div className="box" key={image.id}>
-                {console.log(image)}
                 <div className="item">
                   <div className="delete-icon">
-                    <span onClick={() => handleClick("image")}>
+                    <span onClick={() => handleClick(image)}>
                       <FaTrash />
                     </span>
                   </div>
@@ -76,8 +90,7 @@ const Gallery = () => {
         open={open}
         setOpen={setOpen}
         product={product}
-        refetch={refetch}
-        handleDelete={deleteGallery}
+        handleDelete={handleDelete}
       />
       <AddGalleryModal
         openAddModal={openAddModal}

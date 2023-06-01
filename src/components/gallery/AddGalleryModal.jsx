@@ -8,7 +8,7 @@ import "./modal.scss";
 import { Form } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
-import { AddGallery } from "../../../../config/newReguest";
+import { AddGallery } from "../../config/newReguest";
 import { toast } from "react-toastify";
 
 const style = {
