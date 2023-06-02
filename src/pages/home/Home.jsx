@@ -1,15 +1,8 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Widget from "../../components/utils/widget/Widget";
 import "./home.scss";
 import { useEffect, useState } from "react";
 import { GetCount } from "../../config/newReguest";
-
-// import {
-//   GetDryFruits,
-//   GetJams,
-//   GetPackageProducts,
-// } from "../../config/newReguest";
-// import { useEffect, useState } from "react";
 
 const Home = () => {
   const [count, setCount] = useState();
