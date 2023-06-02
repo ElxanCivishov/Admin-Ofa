@@ -38,7 +38,7 @@ function Login() {
     return (
       <div className="login">
         <form onSubmit={handleSubmit}>
-          <h1>Daxil ol</h1>
+          <h1>Ofa MMC</h1>
           <label htmlFor="email">Email</label>
           <input
             name="email"

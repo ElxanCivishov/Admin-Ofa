@@ -203,6 +203,8 @@ const Product = () => {
                 type="number"
                 className={focused && "invalid"}
                 value={price}
+                min="0"
+                step="1"
                 onChange={(e) => handleChange("price", e.target.value)}
                 onBlur={(event) => handleBlur(event)}
                 required

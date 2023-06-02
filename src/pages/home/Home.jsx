@@ -1,5 +1,8 @@
+import { Navigate, useLocation } from "react-router-dom";
 import Widget from "../../components/utils/widget/Widget";
 import "./home.scss";
+import { useEffect, useState } from "react";
+import { GetCount } from "../../config/newReguest";
 
 // import {
 //   GetDryFruits,
@@ -9,35 +12,38 @@ import "./home.scss";
 // import { useEffect, useState } from "react";
 
 const Home = () => {
-  // const [count, setCount] = useState({
-  //   dryFruits: 0,
-  //   jams: 0,
-  //   packageProducts: 0,
-  //   gallery: 0,
-  //   recipes: 0,
-  // });
+  const [count, setCount] = useState();
 
-  // useEffect(() => {
-  //   GetPackageProducts().then((res) => {
-  //     setCount({ ...count, packageProducts: res.length });
-  //   });
-  //   GetDryFruits().then((res) => {
-  //     setCount({ ...count, dryFruits: res.length });
-  //   });
-  //   GetJams().then((res) => {
-  //     setCount({ ...count, jams: res.length });
-  //   });
-  // }, []);
+  useEffect(() => {
+    const getCount = async () => {
+      try {
+        const res = await GetCount();
+        setCount(res);
+      } catch (error) {
+        <Navigate
+          to="/errorpage"
+          state={{ error: error.message }}
+          replace={true}
+        />;
+      }
+    };
+
+    getCount();
+  }, []);
+
+  console.log(count);
 
   return (
     <div className="home">
-      <div className="widget-wrapper">
-        <Widget type="dryFruits" count="200" />
-        <Widget type="jams" count="0" />
-        <Widget type="packageProducts" count="35" />
-        <Widget type="gallery" count="70" />
-        <Widget type="recipes" count="20" />
-      </div>
+      {count && (
+        <div className="widget-wrapper">
+          <Widget type="dryFruits" count={count.dry} />
+          <Widget type="jams" count={count.jams} />
+          <Widget type="packageProducts" count={count.package} />
+          <Widget type="gallery" count={count.gallery} />
+          <Widget type="recipes" count={count.recipes} />
+        </div>
+      )}
     </div>
   );
 };

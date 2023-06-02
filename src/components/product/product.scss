@@ -16,9 +16,14 @@
     font-weight: 700;
   }
 
-  .delete-icon {
+  .delete-icon-wrapper {
+    width: 20px;
+    margin: 3px;
     color: rgb(186, 21, 21);
     cursor: pointer;
+    .delete-icon {
+      font-size: 14px;
+    }
   }
 
   input {

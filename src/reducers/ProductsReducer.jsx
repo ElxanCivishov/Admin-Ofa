@@ -49,24 +49,26 @@ export const ProductsReducer = (state, action) => {
 
     case "SET_DATA":
       return {
+        price: action.payload.price,
+        category: action.payload.category,
         image: action.payload.image,
         azTitle: action.payload.azTitle,
         azContent: action.payload.azContent,
         azComposition: action.payload.azComposition,
         azAddition: action.payload.azAddition,
         azFeatureTitle: action.payload.azFeatureTitle,
-        azFeatures: action.payload.azFeatures.filter((item) => item.text),
+        azFeatures: action.payload.azFeatures.map((item) => item.text),
         enTitle: action.payload.enTitle,
         enContent: action.payload.enContent,
         enComposition: action.payload.enComposition,
-        enFeatureTitle: action.payload.ruFeatureTitle,
-        enFeatures: action.payload.enFeatures.filter((item) => item.text),
+        enFeatureTitle: action.payload.enFeatureTitle,
+        enFeatures: action.payload.enFeatures.map((item) => item.text),
         enAddition: action.payload.enAddition,
         ruTitle: action.payload.ruTitle,
         ruContent: action.payload.ruContent,
         ruComposition: action.payload.ruComposition,
         ruFeatureTitle: action.payload.ruFeatureTitle,
-        ruFeatures: action.payload.ruFeatures.filter((item) => item.text),
+        ruFeatures: action.payload.ruFeatures.map((item) => item.text),
         ruAddition: action.payload.ruAddition,
       };
 

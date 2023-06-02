@@ -92,8 +92,8 @@ export default function Recipe() {
               >
                 <Form.Group controlId="upload-image">
                   <Form.Label className="upload-image">
-                    <span>Şəkil yüklə </span>
-                    <BiCloudUpload className="upload-icon fs-1" />
+                    <span className="text-muted">Şəkil yüklə </span>
+                    <BiCloudUpload className="upload-icon fs-3 text-muted" />
                   </Form.Label>
                   <Form.Control
                     type="file"

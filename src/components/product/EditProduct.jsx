@@ -49,13 +49,10 @@ const EditProduct = () => {
 
   const queryClient = useQueryClient();
 
-  console.log(state);
-
   useEffect(() => {
     const getRecipe = async () => {
       try {
         const res = await GetProduct(id);
-        console.log(res);
         setPreviewImage(res.image);
         dispatch({ type: "SET_DATA", payload: res });
       } catch (error) {
@@ -77,7 +74,7 @@ const EditProduct = () => {
       queryClient.invalidateQueries({ queryKey: ["jams"] });
       queryClient.invalidateQueries({ queryKey: ["packageProducts"] });
       toast.success("Məhsul düzənləndi!");
-      navigate("/recipes");
+      navigate(-1);
     },
     onError: () => {
       toast.error("Məhsul yüklənmədi!");
@@ -101,7 +98,7 @@ const EditProduct = () => {
       ruContent !== "" &&
       ruComposition !== ""
     ) {
-      mutation.mutate(state);
+      mutation.mutate();
     } else {
       setFocused(true);
       toast.warning("Lazımlı xanalar doldurulmalıdır!");
@@ -173,8 +170,8 @@ const EditProduct = () => {
             >
               <Form.Group controlId="upload-image">
                 <Form.Label className="d-flex align-items-center">
-                  <span>Şəkil yüklə </span>
-                  <BiCloudUpload className="fs-3 me-2 ms-2" />
+                  <span className="text-muted">Şəkil yüklə </span>
+                  <BiCloudUpload className="fs-3 me-2 ms-2 text-muted" />
                 </Form.Label>
                 <Form.Control
                   type="file"
@@ -231,6 +228,8 @@ const EditProduct = () => {
                 type="number"
                 className={focused && "invalid"}
                 value={price}
+                min="0"
+                step="1"
                 onChange={(e) => handleChange("price", e.target.value)}
                 onBlur={(event) => handleBlur(event)}
                 required
@@ -259,7 +258,7 @@ const EditProduct = () => {
               <Form.Control
                 as="textarea"
                 style={{ height: "150px" }}
-                value={azContent}
+                value={azContent || ""}
                 onChange={(e) => handleChange("azContent", e.target.value)}
                 className={focused && "invalid"}
                 onBlur={(event) => handleBlur(event)}
@@ -269,7 +268,9 @@ const EditProduct = () => {
             <Form.Group className="mb-3" controlId="az-content">
               <Form.Label>Tərkib</Form.Label>
               <Form.Control
-                value={azComposition}
+                as="textarea"
+                style={{ height: "100px" }}
+                value={azComposition || ""}
                 onChange={(e) => handleChange("azComposition", e.target.value)}
                 className={focused && "invalid"}
                 onBlur={(event) => handleBlur(event)}
@@ -308,13 +309,19 @@ const EditProduct = () => {
                   as="li"
                   className="d-flex justify-content-between align-items-start"
                 >
-                  <div className="ms-2 me-auto">{f}</div>
-                  <FaTrash
-                    className="delete-icon"
-                    onClick={() =>
-                      dispatch({ type: "AZ_REMOVE_FEATURE", payload: f })
-                    }
-                  />
+                  <div className="ms-2 me-auto w-100">{f}</div>
+                  <div className="delete-icon-wrapper">
+                    <FaTrash
+                      className="delete-icon"
+                      onClick={() => {
+                        dispatch({
+                          type: "REMOVE_FEATURE",
+                          field: "azFeatures",
+                          value: f,
+                        });
+                      }}
+                    />
+                  </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -322,8 +329,8 @@ const EditProduct = () => {
               <Form.Label>Əlavə mətn</Form.Label>
               <Form.Control
                 as="textarea"
-                style={{ height: "150px" }}
-                value={azAddition}
+                style={{ height: "300px" }}
+                value={azAddition || ""}
                 onChange={(e) => handleChange("azAddition", e.target.value)}
               />
             </Form.Group>
@@ -347,7 +354,7 @@ const EditProduct = () => {
               <Form.Control
                 as="textarea"
                 style={{ height: "150px" }}
-                value={enContent}
+                value={enContent || ""}
                 onChange={(e) => handleChange("enContent", e.target.value)}
                 className={focused && "invalid"}
                 onBlur={(event) => handleBlur(event)}
@@ -357,7 +364,9 @@ const EditProduct = () => {
             <Form.Group className="mb-3" controlId="en-content">
               <Form.Label>Composition</Form.Label>
               <Form.Control
-                value={enComposition}
+                as="textarea"
+                style={{ height: "100px" }}
+                value={enComposition || ""}
                 onChange={(e) => handleChange("enComposition", e.target.value)}
                 className={focused && "invalid"}
                 onBlur={(event) => handleBlur(event)}
@@ -396,13 +405,19 @@ const EditProduct = () => {
                   as="li"
                   className="d-flex justify-content-between align-items-start"
                 >
-                  <div className="ms-2 me-auto">{f}</div>
-                  <FaTrash
-                    className="delete-icon"
-                    onClick={() =>
-                      dispatch({ type: "EN_REMOVE_FEATURE", payload: f })
-                    }
-                  />
+                  <div className="ms-2 me-auto w-100">{f}</div>
+                  <div className="delete-icon-wrapper">
+                    <FaTrash
+                      className="delete-icon"
+                      onClick={() =>
+                        dispatch({
+                          type: "REMOVE_FEATURE",
+                          field: "enFeatures",
+                          value: f,
+                        })
+                      }
+                    />
+                  </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -410,8 +425,8 @@ const EditProduct = () => {
               <Form.Label>Addition text</Form.Label>
               <Form.Control
                 as="textarea"
-                style={{ height: "150px" }}
-                value={enAddition}
+                style={{ height: "300px" }}
+                value={enAddition || ""}
                 onChange={(e) => handleChange("enAddition", e.target.value)}
               />
             </Form.Group>
@@ -435,7 +450,7 @@ const EditProduct = () => {
               <Form.Control
                 as="textarea"
                 style={{ height: "150px" }}
-                value={ruContent}
+                value={ruContent || ""}
                 onChange={(e) => handleChange("ruContent", e.target.value)}
                 className={focused && "invalid"}
                 onBlur={(event) => handleBlur(event)}
@@ -445,7 +460,9 @@ const EditProduct = () => {
             <Form.Group className="mb-3" controlId="ru-content">
               <Form.Label>Содержание</Form.Label>
               <Form.Control
-                value={ruComposition}
+                as="textarea"
+                style={{ height: "100px" }}
+                value={ruComposition || ""}
                 onChange={(e) => handleChange("ruComposition", e.target.value)}
                 className={focused && "invalid"}
                 onBlur={(event) => handleBlur(event)}
@@ -484,13 +501,19 @@ const EditProduct = () => {
                   as="li"
                   className="d-flex justify-content-between align-items-start"
                 >
-                  <div className="ms-2 me-auto">{f}</div>
-                  <FaTrash
-                    className="delete-icon"
-                    onClick={() =>
-                      dispatch({ type: "RU_REMOVE_FEATURE", payload: f })
-                    }
-                  />
+                  <div className="ms-2 me-auto w-100">{f}</div>
+                  <div className="delete-icon-wrapper">
+                    <FaTrash
+                      className="delete-icon"
+                      onClick={() =>
+                        dispatch({
+                          type: "REMOVE_FEATURE",
+                          field: "ruFeatures",
+                          value: f,
+                        })
+                      }
+                    />
+                  </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -498,8 +521,8 @@ const EditProduct = () => {
               <Form.Label>Дополнительный текст</Form.Label>
               <Form.Control
                 as="textarea"
-                style={{ height: "150px" }}
-                value={ruAddition}
+                style={{ height: "300px" }}
+                value={ruAddition || ""}
                 onChange={(e) => handleChange("ruAddition", e.target.value)}
               />
             </Form.Group>
